@@ -1,2 +1,4 @@
-# lishunyi-start-base
-基础设置依赖
+# lishunyi-starters
+
+#### 介绍
+开发基础的starter
