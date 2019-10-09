@@ -12,7 +12,7 @@ package com.lishunyi.base.constant;
  **/
 public class PageConstants {
 
-    public static final int PAGE_NUN = 1;
+    public static final int PAGE_NUM = 1;
 
     public static final int PAGE_SIZE = 10;
 }

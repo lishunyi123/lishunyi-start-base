@@ -30,9 +30,9 @@ public class DateConstants {
     /**
      * 秒.
      */
-    public static final long SECONDMILLI = 1000;
+    public static final long SECOND_MILLI = 1000;
 
-    public static final String TIMETO = " 23:59:59";
+    public static final String TIME_TO = " 23:59:59";
 
     public static final transient int BEFORE = 1;
 
