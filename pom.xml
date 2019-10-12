@@ -9,6 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>lishunyi-starter-base</module>
+        <module>lishunyi-starter-swagger</module>
     </modules>
     <!-- 默认为jar，pom表示父类型为pom -->
     <packaging>pom</packaging>
