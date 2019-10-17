@@ -1,6 +1,6 @@
 package com.lishunyi.base.http;
 
-import com.sun.istack.internal.Nullable;
+//import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +45,7 @@ public enum HttpStatus {
         }
     }
 
-    @Nullable
+//    @Nullable
     public static HttpStatus resolve(int statusCode) {
         HttpStatus[] var1 = values();
         int var2 = var1.length;
