@@ -10,6 +10,7 @@
     <modules>
         <module>lishunyi-starter-base</module>
         <module>lishunyi-starter-swagger</module>
+        <module>lishunyi-starter-distributed-id</module>
     </modules>
     <!-- 默认为jar，pom表示父类型为pom -->
     <packaging>pom</packaging>
@@ -17,7 +18,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.9.RELEASE</version>
+        <version>2.2.0.RELEASE</version>
     </parent>
 
     <!-- 开发者信息 -->
