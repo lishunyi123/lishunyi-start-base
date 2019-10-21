@@ -9,6 +9,7 @@ import com.lishunyi.snowflake.SnowflakeIDGenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -28,12 +29,14 @@ public class DistributedIDConfiguration {
     @Autowired
     private DistributedIDPorperties porperties;
 
+    @Bean
     @ConditionalOnProperty(prefix = "distributed.id.segment", name = "enable", havingValue = "true", matchIfMissing = false)
     public SegmentIDGenImpl initLeafSegmentStarter() {
         SegmentIDGenImpl segmentIDGen = new SegmentIDGenImpl();
         return segmentIDGen;
     }
 
+    @Bean
     @ConditionalOnProperty(prefix = "distributed.id.snowflake", name = "enable", havingValue = "true", matchIfMissing = false)
     public SnowflakeIDGenImpl initLeafSnowflakeStarter() {
         SnowflakeIDGenImpl snowflakeIDGen = new SnowflakeIDGenImpl(porperties.getSnowflake().getZookeeper().getAddress(), Integer.parseInt(porperties.getSnowflake().getZookeeper().getPort()));
