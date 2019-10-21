@@ -1,6 +1,9 @@
 package com.lishunyi.config;
 
 import com.lishunyi.porperties.DistributedIDPorperties;
+import com.lishunyi.porperties.SegmentProperties;
+import com.lishunyi.porperties.SnowflakeProperties;
+import com.lishunyi.porperties.ZookeeperProperties;
 import com.lishunyi.segment.service.SegmentIDGenImpl;
 import com.lishunyi.snowflake.SnowflakeIDGenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
  * @Version 1.0
  **/
 @Configuration
-@EnableConfigurationProperties(value = {DistributedIDPorperties.class})
+@EnableConfigurationProperties(value = {DistributedIDPorperties.class, SnowflakeProperties.class, SegmentProperties.class, ZookeeperProperties.class})
 public class DistributedIDConfiguration {
 
     @Autowired
