@@ -4,6 +4,7 @@ import com.lishunyi.base.configFactory.ConfigEnums;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -18,5 +19,17 @@ import java.util.function.Supplier;
  **/
 public class BuilderFactory {
 
-    private static Map<ConfigEnums, Supplier<Builder>> builderFactorys = new EnumMap<ConfigEnums, Supplier<Builder>>(ConfigEnums.class);
+    private static Map<ConfigEnums, Supplier<Builder>> builderFactorys = new EnumMap<>(ConfigEnums.class);
+
+    static {
+        builderFactorys.put(ConfigEnums.YAML, YamlBuilder::new);
+        builderFactorys.put(ConfigEnums.YML, YamlBuilder::new);
+        builderFactorys.put(ConfigEnums.PROPERTIES, PropertiesBuilder::new);
+    }
+
+    public static Builder getBuilder(ConfigEnums configEnums) {
+        return Optional.ofNullable(builderFactorys.get(configEnums))
+                .map(Supplier::get)
+                .orElseThrow(() -> new IllegalArgumentException("当前仅支持yml、proprerties文件"));
+    }
 }
