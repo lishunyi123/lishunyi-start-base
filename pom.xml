@@ -11,6 +11,7 @@
         <module>lishunyi-starter-base</module>
         <module>lishunyi-starter-swagger</module>
         <module>lishunyi-starter-distributed-id</module>
+        <module>lishunyi-starter-mybatis</module>
     </modules>
     <!-- 默认为jar，pom表示父类型为pom -->
     <packaging>pom</packaging>
