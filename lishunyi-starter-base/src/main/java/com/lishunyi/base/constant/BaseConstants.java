@@ -26,4 +26,9 @@ public class BaseConstants {
      * 正斜杠.
      */
     public static final String FORWARD_SLASH = "/";
+
+    /**
+     * 冒号.
+     */
+    public static final String COLON = ":";
 }

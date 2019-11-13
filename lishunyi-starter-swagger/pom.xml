@@ -11,11 +11,6 @@
 
     <artifactId>lishunyi-starter-swagger</artifactId>
 
-    <properties>
-        <swagger2.version>2.9.2</swagger2.version>
-        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.springfox</groupId>

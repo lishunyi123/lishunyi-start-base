@@ -1,13 +1,14 @@
 package com.lishunyi.base.http;
 
-//import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
+
 
 /**
- * @EnumName HttpStatus
- * @Description java类作用描述
+ * @EnumName ResponseCode
+ * @Description HTTP状态码
  * @Author 李顺仪
  * @CreateDate 2019/10/12 14:24
  * @UpdateUser 李顺仪
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public enum HttpStatus {
+public enum ResponseCode {
     OK(200, "操作成功"),
     BAD_REQUEST(400, "错误的请求"),
     UNAUTHORIZED(401, "您没有权限"),
@@ -36,8 +37,8 @@ public enum HttpStatus {
 
     private String msg;
 
-    public static HttpStatus valueOf(int statusCode) {
-        HttpStatus status = resolve(statusCode);
+    public static ResponseCode valueOf(int statusCode) {
+        ResponseCode status = resolve(statusCode);
         if (status == null) {
             throw new IllegalArgumentException("没有与 [" + statusCode + "] 匹配的");
         } else {
@@ -45,18 +46,14 @@ public enum HttpStatus {
         }
     }
 
-//    @Nullable
-    public static HttpStatus resolve(int statusCode) {
-        HttpStatus[] var1 = values();
-        int var2 = var1.length;
-
-        for(int var3 = 0; var3 < var2; ++var3) {
-            HttpStatus status = var1[var3];
+    @Nullable
+    public static ResponseCode resolve(int statusCode) {
+        ResponseCode[] values = values();
+        for (ResponseCode status : values) {
             if (status.code == statusCode) {
                 return status;
             }
         }
-
         return null;
     }
 }
