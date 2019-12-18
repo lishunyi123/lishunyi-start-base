@@ -5,9 +5,14 @@ import com.lishunyi.base.constant.StringPool;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.util.HtmlUtils;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -191,5 +196,115 @@ public class StringUtil extends StringUtils {
 		}
 		sb.append(message.substring(cursor));
 		return sb.toString();
+	}
+
+	/**
+	 * @param coll {@code Collection} 集合
+	 * @return {@code String}
+	 */
+	public static String join(@Nullable Collection<?> coll) {
+		return StringUtil.collectionToCommaDelimitedString(coll);
+	}
+
+	/**
+	 * @param coll      {@code Collection} 集合
+	 * @param delimiter {@code String} 分隔符
+	 * @return {@code String}
+	 */
+	public static String join(@Nullable Collection<?> coll, String delimiter) {
+		return StringUtil.collectionToDelimitedString(coll, delimiter);
+	}
+
+	/**
+	 * @param arr {@code Object[]} 数组
+	 * @return {@code String}
+	 */
+	public static String join(@Nullable Object[] arr) {
+		return StringUtil.arrayToCommaDelimitedString(arr);
+	}
+
+	/**
+	 * @param arr       {@code Object[]} 数组
+	 * @param delimiter {@code String} 分隔符
+	 * @return {@code String}
+	 */
+	public static String join(@Nullable Object[] arr, String delimiter) {
+		return StringUtil.arrayToDelimitedString(arr, delimiter);
+	}
+
+	/**
+	 * 分隔字符串
+	 *
+	 * @param str       {@code String} 字符串
+	 * @param delimiter {@code String} 分隔符
+	 * @return {@code String[]}
+	 */
+	public static String[] split(@Nullable String str, @Nullable String delimiter) {
+		return StringUtil.delimitedListToStringArray(str, delimiter);
+	}
+
+	/**
+	 * 分隔字符串 删除常见空白符
+	 *
+	 * @param str       {@code String} 字符串
+	 * @param delimiter {@code String} 分隔符
+	 * @return {@code String[]}
+	 */
+	public static String[] splitTrim(@Nullable String str, @Nullable String delimiter) {
+		return StringUtil.delimitedListToStringArray(str, delimiter, " \t\n\n\f");
+	}
+
+	/**
+	 * 校验字符串是否符合表达式
+	 *
+	 * @param pattern {@code String} 表达式
+	 * @param str     {@code String} 字符串
+	 * @return {@code boolean} 是否匹配
+	 */
+	public static boolean simpleMatch(@Nullable String pattern, @Nullable String str) {
+		return PatternMatchUtils.simpleMatch(pattern, str);
+	}
+
+	/**
+	 * 校验字符串是否符合表达式数组
+	 *
+	 * @param patterns {@code String[]} 表达式
+	 * @param str      {@code String} 字符串
+	 * @return {@code boolean} 是否匹配
+	 */
+	public static boolean simpleMatch(@Nullable String[] patterns, String str) {
+		return PatternMatchUtils.simpleMatch(patterns, str);
+	}
+
+	/**
+	 * 生成UUID
+	 *
+	 * @return {@code String} UUID
+	 */
+	public static String getUUID() {
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		long lsb = random.nextLong();
+		long msb = random.nextLong();
+		byte[] buf = new byte[32];
+		formatUnsignedLong(lsb, buf, 20, 12);
+		formatUnsignedLong(lsb >>> 48, buf, 16, 4);
+		formatUnsignedLong(msb, buf, 12, 4);
+		formatUnsignedLong(msb >>> 16, buf, 8, 4);
+		formatUnsignedLong(msb >>> 32, buf, 0, 8);
+		return new String(buf, StandardCharsets.UTF_8);
+	}
+
+	private static void formatUnsignedLong(long val, byte[] buf, int offset, int len) {
+		int charPos = offset + len;
+		int radix = 1 << 4;
+		int mask = radix - 1;
+		do {
+			buf[--charPos] = NumberUtil.DIGITS[((int) val) & mask];
+			val >>>= 4;
+		} while (charPos > offset);
+	}
+
+	public static String escapeHtml(String html) {
+		return HtmlUtils.htmlEscape(html);
 	}
 }
