@@ -24,7 +24,7 @@ public abstract class BaseEntity implements Serializable {
 	/**
 	 * 分布式ID，不使用单表自增
 	 */
-	@TableId(type = IdType.ID_WORKER)
+	@TableId(type = IdType.ASSIGN_ID)
 	private Long id;
 
 	/**
