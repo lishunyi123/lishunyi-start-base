@@ -7,8 +7,8 @@ import lombok.Data;
 public class LeafAlloc {
 
     @TableField("biz_tag")
-    private String key;
-    private Long maxId;
+	private String idKey;
+	private Long maxId;
     private Integer step;
     private String description;
     private String updateTime;

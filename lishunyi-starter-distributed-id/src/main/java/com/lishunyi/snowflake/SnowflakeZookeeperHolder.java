@@ -3,6 +3,8 @@ package com.lishunyi.snowflake;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import com.lishunyi.common.PropertyFactory;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.curator.RetryPolicy;
@@ -11,9 +13,6 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryUntilElapsed;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,33 +27,30 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SnowflakeZookeeperHolder {
 
-    @Autowired
-    private Environment env;
 
-    private String zk_AddressNode = null;//保存自身的key  ip:port-000000001
-    private String listenAddress = null;//保存自身的key ip:port
-    private int workerID;
-    private String ip;
-    private String port;
-    private String connectionString;
-    private long lastUpdateTime;
+	private String zk_AddressNode = null;//保存自身的key  ip:port-000000001
+	private String listenAddress = null;//保存自身的key ip:port
+	private int workerID;
+	private static final String PREFIX_ZK_PATH = "/snowflake/" + PropertyFactory.getProperties().get("spring");
+	private static final String PROP_PATH = System.getProperty("java.io.tmpdir") + File.separator + PropertyFactory.getProperties().getProperty("spring.application.name") + "/leafconf/{port}/workerID.properties";
+	private static final String PATH_FOREVER = PREFIX_ZK_PATH + "/forever";//保存所有数据持久的节点
+	private String ip;
+	private String port;
+	private String connectionString;
+	private long lastUpdateTime;
 
-    private String getApplicationName() {
-        return env.getProperty("application.name");
-    }
-
-    public SnowflakeZookeeperHolder(String ip, String port, String connectionString) {
-        this.ip = ip;
-        this.port = port;
-        this.listenAddress = ip + ":" + port;
-        this.connectionString = connectionString;
+	public SnowflakeZookeeperHolder(String ip, String port, String connectionString) {
+		this.ip = ip;
+		this.port = port;
+		this.listenAddress = ip + ":" + port;
+		this.connectionString = connectionString;
     }
 
     public boolean init() {
         try {
             CuratorFramework curator = createWithOptions(connectionString, new RetryUntilElapsed(1000, 4), 10000, 6000);
             curator.start();
-            Stat stat = curator.checkExists().forPath("/snowflake/" + getApplicationName() + "/forever");
+			Stat stat = curator.checkExists().forPath(PATH_FOREVER);
             if (stat == null) {
                 //不存在根节点,机器第一次启动,创建/snowflake/ip:port-000000000,并上传数据
                 zk_AddressNode = createNode(curator);
@@ -67,7 +63,7 @@ public class SnowflakeZookeeperHolder {
                 Map<String, Integer> nodeMap = Maps.newHashMap();//ip:port->00001
                 Map<String, String> realNode = Maps.newHashMap();//ip:port->(ipport-000001)
                 //存在根节点,先检查是否有属于自己的根节点
-                List<String> keys = curator.getChildren().forPath("/snowflake/" + getApplicationName() + "/forever");
+				List<String> keys = curator.getChildren().forPath(PATH_FOREVER);
                 for (String key : keys) {
                     String[] nodeKey = key.split("-");
                     realNode.put(nodeKey[0], key);
@@ -76,8 +72,8 @@ public class SnowflakeZookeeperHolder {
                 Integer workerid = nodeMap.get(listenAddress);
                 if (workerid != null) {
                     //有自己的节点,zk_AddressNode=ip:port
-                    zk_AddressNode = "/snowflake/" + getApplicationName() + "/forever" + "/" + realNode.get(listenAddress);
-                    workerID = workerid;//启动worder时使用会使用
+					zk_AddressNode = PATH_FOREVER + "/" + realNode.get(listenAddress);
+					workerID = workerid;//启动worder时使用会使用
                     if (!checkInitTimeStamp(curator, zk_AddressNode)) {
                         throw new Exception("init timestamp check error,forever node timestamp gt this node time");
                     }
@@ -99,11 +95,11 @@ public class SnowflakeZookeeperHolder {
         } catch (Exception e) {
             log.error("Start node ERROR {}", e);
             try {
-                Properties properties = new Properties();
-                properties.load(new FileInputStream(new File(System.getProperty("java.io.tmpdir") + File.separator + getApplicationName() + "/leafconf/{port}/workerID.properties".replace("{port}", port + ""))));
-                workerID = Integer.valueOf(properties.getProperty("workerID"));
-                log.warn("START FAILED ,use local node file properties workerID-{}", workerID);
-            } catch (Exception e1) {
+				Properties properties = new Properties();
+				properties.load(new FileInputStream(new File(PROP_PATH.replace("{port}", port + ""))));
+				workerID = Integer.valueOf(properties.getProperty("distributed.id.snowflake.workerID"));
+				log.warn("START FAILED ,use local node file properties workerID-{}", workerID);
+			} catch (Exception e1) {
                 log.error("Read file error ", e1);
                 return false;
             }
@@ -148,7 +144,7 @@ public class SnowflakeZookeeperHolder {
      */
     private String createNode(CuratorFramework curator) throws Exception {
         try {
-            return curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT_SEQUENTIAL).forPath("/snowflake/" + getApplicationName() + "/forever" + "/" + listenAddress + "-", buildData().getBytes());
+			return curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT_SEQUENTIAL).forPath(PATH_FOREVER + "/" + listenAddress + "-", buildData().getBytes());
         } catch (Exception e) {
             log.error("create node error msg {} ", e.getMessage());
             throw e;
@@ -191,8 +187,8 @@ public class SnowflakeZookeeperHolder {
      * @param workerID
      */
     private void updateLocalWorkerID(int workerID) {
-        File leafConfFile = new File(System.getProperty("java.io.tmpdir") + File.separator + getApplicationName() + "/leafconf/{port}/workerID.properties".replace("{port}", port));
-        boolean exists = leafConfFile.exists();
+		File leafConfFile = new File(PROP_PATH.replace("{port}", port));
+		boolean exists = leafConfFile.exists();
         log.info("file exists status is {}", exists);
         if (exists) {
             try {
@@ -228,47 +224,19 @@ public class SnowflakeZookeeperHolder {
                 .build();
     }
 
-    /**
-     * 上报数据结构
-     */
-    static class Endpoint {
-        private String ip;
-        private String port;
-        private long timestamp;
+	/**
+	 * 上报数据结构
+	 */
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	static class Endpoint {
+		private String ip;
+		private String port;
+		private long timestamp;
 
-        public Endpoint() {
-        }
-
-        public Endpoint(String ip, String port, long timestamp) {
-            this.ip = ip;
-            this.port = port;
-            this.timestamp = timestamp;
-        }
-
-        public String getIp() {
-            return ip;
-        }
-
-        public void setIp(String ip) {
-            this.ip = ip;
-        }
-
-        public String getPort() {
-            return port;
-        }
-
-        public void setPort(String port) {
-            this.port = port;
-        }
-
-        public long getTimestamp() {
-            return timestamp;
-        }
-
-        public void setTimestamp(long timestamp) {
-            this.timestamp = timestamp;
-        }
-    }
+	}
 
     public String getZk_AddressNode() {
         return zk_AddressNode;

@@ -12,8 +12,13 @@ package com.lishunyi.common;
  **/
 public class ZeroIDGen implements IDGen {
 
-    @Override
-    public Long get(String key) {
-        return 0L;
-    }
+	@Override
+	public Long get(String key) {
+		return 0L;
+	}
+
+	@Override
+	public boolean init() {
+		return true;
+	}
 }

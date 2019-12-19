@@ -12,9 +12,17 @@
         <module>lishunyi-starter-swagger</module>
         <module>lishunyi-starter-distributed-id</module>
         <module>lishunyi-starter-mybatis</module>
+        <module>lishunyi-starter-distributed-lock</module>
+        <module>lishunyi-starter-dependencies</module>
     </modules>
     <!-- 默认为jar，pom表示父类型为pom -->
     <packaging>pom</packaging>
+
+    <properties>
+        <swagger2.version>2.9.2</swagger2.version>
+        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+    </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -22,10 +30,6 @@
         <version>2.2.0.RELEASE</version>
     </parent>
 
-    <properties>
-        <swagger2.version>2.9.2</swagger2.version>
-        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-    </properties>
 
     <!-- 开发者信息 -->
     <developers>

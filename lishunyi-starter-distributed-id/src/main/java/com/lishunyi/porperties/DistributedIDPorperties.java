@@ -2,7 +2,11 @@ package com.lishunyi.porperties;
 
 import com.lishunyi.porperties.SegmentProperties;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.io.Serializable;
 
 /**
  * @ClassName DistributedIDPorperties
@@ -14,11 +18,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @UpdateRemark 修改内容
  * @Version 1.0
  **/
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "distributed.id")
-public class DistributedIDPorperties {
+public class DistributedIDPorperties implements Serializable {
 
-    private SegmentProperties segment;
+	private static final long serialVersionUID = 6354267765020812700L;
 
-    private SnowflakeProperties snowflake;
+	private SegmentProperties segment;
+
+	private SnowflakeProperties snowflake;
 }

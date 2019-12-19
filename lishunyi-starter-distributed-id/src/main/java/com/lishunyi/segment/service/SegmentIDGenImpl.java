@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  **/
 @Slf4j
+@Service
 public class SegmentIDGenImpl implements IDGen {
 
     /**
@@ -61,7 +63,8 @@ public class SegmentIDGenImpl implements IDGen {
 
     private Map<String, SegmentBuffer> cache = new ConcurrentHashMap<>(16);
 
-    private LeafAllocMapper leafAllocMapper;
+	@Autowired
+	private LeafAllocMapper leafAllocMapper;
 
     @Override
     public Long get(String key) {
@@ -102,17 +105,18 @@ public class SegmentIDGenImpl implements IDGen {
         log.info("update cache from db");
         StopWatch sw = new Slf4JStopWatch();
         try {
-            List<String> dbTags = leafAllocMapper.selectList(null).parallelStream().map(LeafAlloc::getKey).collect(Collectors.toList());
-            if (CollectionUtils.isEmpty(dbTags)) {
-                return;
-            }
-            List<String> cacheTags = new ArrayList<>(cache.keySet());
-            List<String> insertTags = new ArrayList<>(dbTags);
-            List<String> removeTags = new ArrayList<>(cacheTags);
-            //db中新加的tags灌进cache
-            insertTags.removeAll(cacheTags);
-            for (String tag : insertTags) {
-                SegmentBuffer buffer = new SegmentBuffer();
+			List<LeafAlloc> leafAllocs = leafAllocMapper.selectList(null);
+			List<String> dbTags = leafAllocs.parallelStream().map(LeafAlloc::getIdKey).collect(Collectors.toList());
+			if (CollectionUtils.isEmpty(dbTags)) {
+				return;
+			}
+			List<String> cacheTags = new ArrayList<>(cache.keySet());
+			List<String> insertTags = new ArrayList<>(dbTags);
+			List<String> removeTags = new ArrayList<>(cacheTags);
+			//db中新加的tags灌进cache
+			insertTags.removeAll(cacheTags);
+			for (String tag : insertTags) {
+				SegmentBuffer buffer = new SegmentBuffer();
                 buffer.setKey(tag);
                 Segment segment = buffer.getCurrent();
                 segment.setValue(new AtomicLong(0));
@@ -181,12 +185,12 @@ public class SegmentIDGenImpl implements IDGen {
             }
             log.info("leafKey[{}], step[{}], duration[{}mins], nextStep[{}]", key, buffer.getStep(), String.format("%.2f",((double)duration / (1000 * 60))), nextStep);
             LeafAlloc temp = new LeafAlloc();
-            temp.setKey(key);
-            temp.setStep(nextStep);
+			temp.setIdKey(key);
+			temp.setStep(nextStep);
             leafAllocMapper.updateMaxIdByCustomStep(temp);
             QueryWrapper<LeafAlloc> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(LeafAlloc::getKey, key);
-            leafAlloc = leafAllocMapper.selectOne(queryWrapper);
+			queryWrapper.lambda().eq(LeafAlloc::getIdKey, key);
+			leafAlloc = leafAllocMapper.selectOne(queryWrapper);
             buffer.setUpdateTimestamp(System.currentTimeMillis());
             buffer.setStep(nextStep);
             buffer.setMinStep(leafAlloc.getStep());//leafAlloc的step为DB中的step
@@ -201,10 +205,10 @@ public class SegmentIDGenImpl implements IDGen {
 
     private LeafAlloc updateMaxIdAndGetLeafAlloc(String key) {
         UpdateWrapper<LeafAlloc> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(LeafAlloc::getKey, key).setSql("max_id = max_id + step");
-        leafAllocMapper.update(null, updateWrapper);
+		updateWrapper.lambda().eq(LeafAlloc::getIdKey, key).setSql("max_id = max_id + step");
+		leafAllocMapper.update(null, updateWrapper);
         QueryWrapper<LeafAlloc> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(LeafAlloc::getKey, key);
+		queryWrapper.lambda().eq(LeafAlloc::getIdKey, key);
         return leafAllocMapper.selectOne(queryWrapper);
     }
 

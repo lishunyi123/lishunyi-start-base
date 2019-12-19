@@ -39,7 +39,7 @@ public class DistributedIDConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "distributed.id.snowflake", name = "enable", havingValue = "true", matchIfMissing = false)
     public SnowflakeIDGenImpl initLeafSnowflakeStarter() {
-        SnowflakeIDGenImpl snowflakeIDGen = new SnowflakeIDGenImpl(porperties.getSnowflake().getZookeeper().getAddress(), Integer.parseInt(porperties.getSnowflake().getZookeeper().getPort()));
+        SnowflakeIDGenImpl snowflakeIDGen = new SnowflakeIDGenImpl(porperties.getSnowflake().getZookeeper().getAddress(), porperties.getSnowflake().getZookeeper().getPort());
         return snowflakeIDGen;
     }
 }

@@ -1,6 +1,8 @@
 package com.lishunyi.segment.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -11,7 +13,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * 双buffer
  */
-@Data
+@Getter
+@Setter
 public class SegmentBuffer {
     private String key;
     private Segment[] segments; //双buffer

@@ -1,6 +1,9 @@
 package com.lishunyi.porperties;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.io.Serializable;
 
 /**
  * @ClassName ZookeeperProperties
@@ -13,9 +16,12 @@ import lombok.Data;
  * @Version 1.0
  **/
 @Data
-public class ZookeeperProperties {
+@ConfigurationProperties(prefix = "distributed.id.snowflake.zookeeper")
+public class ZookeeperProperties implements Serializable {
 
-    private String address;
+	private static final long serialVersionUID = -1817382290190927191L;
 
-    private String port;
+	private String address;
+
+	private Integer port;
 }
