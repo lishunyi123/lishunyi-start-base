@@ -13,6 +13,7 @@
         <module>lishunyi-starter-distributed-id</module>
         <module>lishunyi-starter-mybatis</module>
         <module>lishunyi-starter-distributed-lock</module>
+        <module>lishunyi-starter-dependencies</module>
     </modules>
     <!-- 默认为jar，pom表示父类型为pom -->
     <packaging>pom</packaging>
@@ -21,13 +22,14 @@
         <swagger2.version>2.9.2</swagger2.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
         <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.0.RELEASE</version>
-    </parent>
+    <!--    <parent>-->
+    <!--        <groupId>org.springframework.boot</groupId>-->
+    <!--        <artifactId>spring-boot-starter-parent</artifactId>-->
+    <!--        <version>2.2.1.RELEASE</version>-->
+    <!--    </parent>-->
 
 
     <!-- 开发者信息 -->
@@ -41,6 +43,18 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.lishunyi</groupId>
+                <artifactId>lishunyi-starter-dependencies</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -56,15 +70,16 @@
         </dependency>
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger2.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/102671-release-65zxQZ/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/102671-snapshot-hm5RmW/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>

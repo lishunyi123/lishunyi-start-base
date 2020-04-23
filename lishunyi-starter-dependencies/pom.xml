@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <groupId>com.lishunyi</groupId>
+    <artifactId>lishunyi-starter-dependencies</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+        <swagger2.version>2.9.2</swagger2.version>
+        <knife4j.version>2.0.2</knife4j.version>
+        <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <p6spy.version>3.8.6</p6spy.version>
+        <curator.version>4.2.0</curator.version>
+        <perf4j.version>0.9.16</perf4j.version>
+        <commons-io.version>2.6</commons-io.version>
+        <redisson.version>3.12.5</redisson.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--      以bom方式引入springboot      -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--      以bom方式引入knife4j      -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-dependencies</artifactId>
+                <version>${knife4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+
+            <!--      mybatis-plus      -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>${p6spy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.perf4j</groupId>
+                <artifactId>perf4j</artifactId>
+                <version>${perf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/102671-release-65zxQZ/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/102671-snapshot-hm5RmW/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

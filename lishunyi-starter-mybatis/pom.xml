@@ -11,21 +11,16 @@
 
     <artifactId>lishunyi-starter-mybatis</artifactId>
 
-    <properties>
-        <mybatis-plus.version>3.3.0</mybatis-plus.version>
-        <p6spy.version>3.8.6</p6spy.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
         </dependency>
+
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
-            <version>${p6spy.version}</version>
         </dependency>
 
     </dependencies>
