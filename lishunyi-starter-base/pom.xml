@@ -39,6 +39,13 @@
         </dependency>
 
         <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-auto</artifactId>
+            <version>1.2.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>io.codearte.props2yaml</groupId>
             <artifactId>props2yaml</artifactId>
             <version>0.5</version>
