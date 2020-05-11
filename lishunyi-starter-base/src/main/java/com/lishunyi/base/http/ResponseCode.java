@@ -39,7 +39,7 @@ public enum ResponseCode {
 	PARAM_TYPE_ERROR(1001, "请求参数类型错误"),
 	PARAM_BIND_ERROR(1002, "请求参数绑定错误"),
 	PARAM_VALID_ERROR(1003, "参数校验失败"),
-	MSG_NOT_READABLE(1004, "消息不能读取");
+	MSG_NOT_READABLE(1004, "JSON解析错误");
 
 	private int code;
 

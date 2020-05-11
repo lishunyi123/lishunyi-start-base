@@ -86,8 +86,8 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Response<Object> handleException(HttpMessageNotReadableException e) {
-		log.warn("消息不能读取：{}", e.getMessage());
-		return Response.error(ResponseCode.MSG_NOT_READABLE, e.getMessage());
+		log.warn("JSON解析错误：{}", e.getMessage());
+		return Response.error(ResponseCode.MSG_NOT_READABLE);
 	}
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -110,5 +110,19 @@ public class GlobalExceptionHandler extends AbstractExceptionHandler {
 		String message = e.getMessage() + " " + StringUtil.join(e.getSupportedMediaTypes());
 		log.warn("不接受的媒体类型：{}", message);
 		return Response.error(ResponseCode.UNSUPPORTED_MEDIA_TYPE, message);
+	}
+
+	@ExceptionHandler(BusinessException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public Response<Object> handleException(BusinessException e) {
+		log.error("业务异常：{}", e.getMessage());
+		return Response.error(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+	}
+
+	@ExceptionHandler(Throwable.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public Response<Object> handleException(Throwable e) {
+		log.error("未知异常：{}", e.getMessage());
+		return Response.error(ResponseCode.INTERNAL_SERVER_ERROR);
 	}
 }
