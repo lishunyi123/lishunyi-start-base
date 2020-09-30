@@ -12,6 +12,8 @@
 
     <properties>
         <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR6</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
         <swagger2.version>2.9.2</swagger2.version>
         <knife4j.version>2.0.5</knife4j.version>
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
@@ -22,6 +24,7 @@
         <redisson.version>3.12.5</redisson.version>
         <xk-time.version>2.1.2</xk-time.version>
         <hutool.version>5.4.3</hutool.version>
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -31,6 +34,24 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--      以bom方式引入spring-cloud      -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--      以bom方式引入spring-cloud-alibaba      -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -79,6 +100,12 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
 
             <dependency>
