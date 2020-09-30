@@ -11,15 +11,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
+        <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
         <swagger2.version>2.9.2</swagger2.version>
-        <knife4j.version>2.0.2</knife4j.version>
+        <knife4j.version>2.0.5</knife4j.version>
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
         <p6spy.version>3.8.6</p6spy.version>
         <curator.version>4.2.0</curator.version>
         <perf4j.version>0.9.16</perf4j.version>
         <commons-io.version>2.6</commons-io.version>
         <redisson.version>3.12.5</redisson.version>
+        <xk-time.version>2.1.2</xk-time.version>
+        <hutool.version>5.4.3</hutool.version>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +85,20 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redisson.version}</version>
+            </dependency>
+
+            <!--      日期时间工具包      -->
+            <dependency>
+                <groupId>com.github.xkzhangsan</groupId>
+                <artifactId>xk-time</artifactId>
+                <version>${xk-time.version}</version>
+            </dependency>
+
+            <!--      工具包      -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
             <dependency>

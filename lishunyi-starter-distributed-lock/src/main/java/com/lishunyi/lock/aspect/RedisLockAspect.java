@@ -35,7 +35,6 @@ public class RedisLockAspect implements ApplicationContextAware {
 	public Object aroundRedisLock(ProceedingJoinPoint point, RedisLock redisLock) {
 		String lockName = redisLock.value();
 		Assert.hasText(lockName, "@RedisLock value 不可为空");
-
-		redisLock.
+		return null;
 	}
 }

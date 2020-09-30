@@ -69,7 +69,7 @@ public class RedisLockClientImpl implements RedisLockClient {
 		try {
 			boolean result = this.tryLock(lockName, lockType, waitTime, leaseTime, timeUnit);
 			if (result) {
-				return supplier.get();
+//				return supplier.get();
 			}
 		} catch (Exception e) {
 			throw new LockException(e.getMessage());

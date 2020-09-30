@@ -9,8 +9,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>lishunyi-starter-base</module>
-        <module>lishunyi-starter-swagger</module>
-        <module>lishunyi-starter-distributed-id</module>
         <module>lishunyi-starter-mybatis</module>
         <module>lishunyi-starter-distributed-lock</module>
         <module>lishunyi-starter-dependencies</module>
