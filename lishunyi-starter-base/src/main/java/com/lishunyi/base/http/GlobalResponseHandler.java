@@ -28,7 +28,6 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 	@Override
 	public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
 		// AnnotatedElementUtils.hasAnnotation(methodParameter.getContainingClass(), LsyRestController.class);
-		System.out.println(111);
 		// 返回类型不是`Response`并且是@LsyRestController注解下需处理
 		return AnnotatedElementUtils.hasAnnotation(methodParameter.getContainingClass(), LsyRestController.class) &&
 			!methodParameter.getParameterType().equals(Response.class);
