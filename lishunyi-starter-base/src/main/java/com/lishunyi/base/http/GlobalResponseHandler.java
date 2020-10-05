@@ -2,7 +2,9 @@ package com.lishunyi.base.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lishunyi.base.annotation.LsyRestController;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -25,9 +27,11 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
 	@Override
 	public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
+		// AnnotatedElementUtils.hasAnnotation(methodParameter.getContainingClass(), LsyRestController.class);
 		System.out.println(111);
-		// 如果返回类型就是`Response`则无需处理
-		return !methodParameter.getParameterType().equals(Response.class);
+		// 返回类型不是`Response`并且是@LsyRestController注解下需处理
+		return AnnotatedElementUtils.hasAnnotation(methodParameter.getContainingClass(), LsyRestController.class) &&
+			!methodParameter.getParameterType().equals(Response.class);
 	}
 
 	@Override
