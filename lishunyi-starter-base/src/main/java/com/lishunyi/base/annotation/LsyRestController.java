@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 /**
  * 自定义RestController注解
- * 数据统一返回体扫描这个注解下的方法
+ * 该注解下的方法会包装统一消息返回体{@link com.lishunyi.base.http.Response}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

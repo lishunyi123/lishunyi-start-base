@@ -3,6 +3,7 @@ package com.lishunyi.base.http;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lishunyi.base.annotation.LsyRestController;
+import com.lishunyi.base.exception.BusinessException;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.MediaType;
@@ -41,7 +42,7 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 			try {
 				return objectMapper.writeValueAsString(Response.success(data));
 			} catch (JsonProcessingException e) {
-				// 返回String类型错误
+				throw new BusinessException("String类型转换失败");
 			}
 		}
 		return Response.success(data);
