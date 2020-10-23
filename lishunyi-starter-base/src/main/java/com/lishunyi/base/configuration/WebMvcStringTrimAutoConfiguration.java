@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,19 +36,14 @@ public class WebMvcStringTrimAutoConfiguration {
 
 	@Bean
 	public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-		return new Jackson2ObjectMapperBuilderCustomizer() {
-			@Override
-			public void customize(Jackson2ObjectMapperBuilder jacksonObjectMapperBuilder) {
-				jacksonObjectMapperBuilder
-					.deserializerByType(String.class, new StdScalarDeserializer<Object>(String.class) {
-						@Override
-						public String deserialize(JsonParser jsonParser, DeserializationContext ctx)
-							throws IOException {
-							return StringUtils.trimWhitespace(jsonParser.getValueAsString());
-						}
-					});
-			}
-		};
+		return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder
+			.deserializerByType(String.class, new StdScalarDeserializer<Object>(String.class) {
+				@Override
+				public String deserialize(JsonParser jsonParser, DeserializationContext ctx)
+					throws IOException {
+					return StringUtils.trimWhitespace(jsonParser.getValueAsString());
+				}
+			});
 	}
 
 	@ControllerAdvice
