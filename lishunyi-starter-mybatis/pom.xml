@@ -23,6 +23,11 @@
             <artifactId>p6spy</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+        </dependency>
+
     </dependencies>
 
 

@@ -16,7 +16,7 @@
         <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
         <swagger2.version>2.9.2</swagger2.version>
         <knife4j.version>2.0.5</knife4j.version>
-        <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <p6spy.version>3.8.6</p6spy.version>
         <curator.version>4.2.0</curator.version>
         <perf4j.version>0.9.16</perf4j.version>

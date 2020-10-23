@@ -2,6 +2,7 @@ package com.lishunyi.mybatis.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,30 +35,35 @@ public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements
 	 * 分布式ID，不使用单表自增
 	 */
 	@TableId(type = IdType.ASSIGN_ID)
+	@ApiModelProperty(value = "主键")
 	protected Long id;
 
 	/**
 	 * 创建时间
 	 */
 	@TableField(fill = FieldFill.INSERT)
+	@ApiModelProperty(value = "创建时间")
 	protected LocalDateTime createTime;
 
 	/**
 	 * 创建人
 	 */
 	@TableField(fill = FieldFill.INSERT)
+	@ApiModelProperty(value = "创建人")
 	protected Long createBy;
 
 	/**
 	 * 更新时间
 	 */
 	@TableField(fill = FieldFill.INSERT_UPDATE)
+	@ApiModelProperty(value = "更新时间")
 	protected LocalDateTime updateTime;
 
 	/**
 	 * 更新人
 	 */
 	@TableField(fill = FieldFill.INSERT_UPDATE)
+	@ApiModelProperty(value = "更新人")
 	protected Long updateBy;
 
 	/**
@@ -65,6 +71,7 @@ public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements
 	 */
 	@TableField("is_deleted")
 	@TableLogic
+	@ApiModelProperty(value = "是否删除")
 	protected Boolean deleted;
 
 	/**
