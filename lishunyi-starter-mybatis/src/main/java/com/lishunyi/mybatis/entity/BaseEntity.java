@@ -2,11 +2,14 @@ package com.lishunyi.mybatis.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @ClassName BaseEntity
@@ -35,10 +38,9 @@ public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements
 
 	/**
 	 * 创建时间
-	 * 使用jdk1.8的Instant替代Date
 	 */
 	@TableField(fill = FieldFill.INSERT)
-	protected LocalDate createTime;
+	protected LocalDateTime createTime;
 
 	/**
 	 * 创建人
@@ -48,10 +50,9 @@ public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements
 
 	/**
 	 * 更新时间
-	 * 使用jdk1.8的Instant替代Date
 	 */
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-	protected LocalDate updateTime;
+	protected LocalDateTime updateTime;
 
 	/**
 	 * 更新人
