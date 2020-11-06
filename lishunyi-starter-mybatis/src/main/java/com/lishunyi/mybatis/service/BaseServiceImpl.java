@@ -4,19 +4,21 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.lishunyi.base.constant.BaseConstants;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lishunyi.base.id.IdConfig;
 import com.lishunyi.mybatis.entity.BaseEntity;
+import com.lishunyi.mybatis.entity.BaseTenantEntity;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -30,40 +32,43 @@ import java.util.function.Function;
  * @version 1.0
  * @since 2020/10/26 16:56
  **/
-public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> implements IService<T>, InitializingBean {
+public abstract class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> extends ServiceImpl<M, T> implements IService<T> {
 	protected Log log = LogFactory.getLog(this.getClass());
-	@Autowired
+	@Autowired(required = false)
 	protected M baseMapper;
 
 	@Value("${spring.application.name:default}")
 	private String applicationName;
 
+	@Autowired
+	protected IdConfig idConfig;
+
+	@Autowired
+	protected RedisTemplate<String, Object> redisTemplate;
+
 	private Long tenantId;
 
-	private String cacheKeyPrefix;
-
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if (Objects.isNull(tenantId)) {
-			tenantId = 0L;
+	private void initId(T entity) {
+		if (entity instanceof BaseTenantEntity) {
+			// TODO ID发号中心赋值
+			entity.setId(1L);
+		} else {
+			entity.setId(idConfig.snowflake().nextId());
 		}
-		this.cacheKeyPrefix = this.applicationName + BaseConstants.COLON + tenantId + BaseConstants.COLON + this.getClass().getName() + BaseConstants.COLON;
 	}
 
 	@Override
 	public boolean save(T entity) {
-		return SqlHelper.retBool(this.getBaseMapper().insert(entity));
-	}
-
-	@Override
-	public boolean saveBatch(Collection<T> entityList) {
-		return false;
+		this.initId(entity);
+		return super.save(entity);
 	}
 
 	@Override
 	public boolean saveBatch(Collection<T> entityList, int batchSize) {
-		return false;
+		if (!CollectionUtils.isEmpty(entityList)) {
+			entityList.forEach(this::initId);
+		}
+		return super.saveBatch(entityList, batchSize);
 	}
 
 	@Override
@@ -77,6 +82,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> i
 	}
 
 	@Override
+	@CacheEvict(value = "cache", key = "#root.targetClass.simpleName + ':' + #id")
 	public boolean removeById(Serializable id) {
 		return false;
 	}
@@ -93,13 +99,14 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> i
 
 	@Override
 	public boolean removeByIds(Collection<? extends Serializable> idList) {
+		redisTemplate.delete((Collection<String>) idList);
 		return false;
 	}
 
 	@Override
-	@CachePut(value = "entity", key = "#entity.id")
+	@CacheEvict(value = "cache", key = "#root.targetClass.simpleName + ':' + #entity.id")
 	public boolean updateById(T entity) {
-		return false;
+		return super.updateById(entity);
 	}
 
 	@Override
@@ -124,12 +131,19 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> i
 
 	@Override
 	public boolean saveOrUpdate(T entity) {
-		return false;
+		if (Objects.isNull(entity)) {
+			return false;
+		}
+		if (Objects.isNull(entity.getId())) {
+			return this.save(entity);
+		}
+		return this.updateById(entity);
 	}
 
 	@Override
+	@Cacheable(value = "cache", key = "#root.targetClass.simpleName + ':' + #id")
 	public T getById(Serializable id) {
-		return null;
+		return super.getById(id);
 	}
 
 	@Override
@@ -194,51 +208,6 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> i
 
 	@Override
 	public List<Map<String, Object>> listMaps(Wrapper<T> queryWrapper) {
-		return null;
-	}
-
-	@Override
-	public List<Map<String, Object>> listMaps() {
-		return null;
-	}
-
-	@Override
-	public List<Object> listObjs() {
-		return null;
-	}
-
-	@Override
-	public <V> List<V> listObjs(Function<? super Object, V> mapper) {
-		return null;
-	}
-
-	@Override
-	public List<Object> listObjs(Wrapper<T> queryWrapper) {
-		return null;
-	}
-
-	@Override
-	public <V> List<V> listObjs(Wrapper<T> queryWrapper, Function<? super Object, V> mapper) {
-		return null;
-	}
-
-	@Override
-	public <E extends IPage<Map<String, Object>>> E pageMaps(E page, Wrapper<T> queryWrapper) {
-		return null;
-	}
-
-	@Override
-	public <E extends IPage<Map<String, Object>>> E pageMaps(E page) {
-		return null;
-	}
-
-	@Override
-	public BaseMapper<T> getBaseMapper() {
-		return null;
-	}
-
-	@Override
-	public QueryChainWrapper<T> query() {
 		return null;
 	}
 

@@ -1,6 +1,9 @@
 package com.lishunyi.mybatis.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -41,28 +44,28 @@ public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements
 	/**
 	 * 创建时间
 	 */
-	@TableField(fill = FieldFill.INSERT)
+//	@TableField(fill = FieldFill.INSERT)
 	@ApiModelProperty(value = "创建时间")
 	protected LocalDateTime createTime;
 
 	/**
 	 * 创建人
 	 */
-	@TableField(fill = FieldFill.INSERT)
+//	@TableField(fill = FieldFill.INSERT)
 	@ApiModelProperty(value = "创建人")
 	protected Long createBy;
 
 	/**
 	 * 更新时间
 	 */
-	@TableField(fill = FieldFill.INSERT_UPDATE)
+//	@TableField(fill = FieldFill.INSERT_UPDATE)
 	@ApiModelProperty(value = "更新时间")
 	protected LocalDateTime updateTime;
 
 	/**
 	 * 更新人
 	 */
-	@TableField(fill = FieldFill.INSERT_UPDATE)
+//	@TableField(fill = FieldFill.INSERT_UPDATE)
 	@ApiModelProperty(value = "更新人")
 	protected Long updateBy;
 
@@ -73,9 +76,4 @@ public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements
 	@TableLogic
 	@ApiModelProperty(value = "是否删除")
 	protected Boolean deleted;
-
-	/**
-	 * 版本号
-	 */
-	protected Long version;
 }

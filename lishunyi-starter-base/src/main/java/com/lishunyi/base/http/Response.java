@@ -1,10 +1,16 @@
 package com.lishunyi.base.http;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.SneakyThrows;
+import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -106,26 +112,40 @@ public class Response<T> implements Serializable {
         return new Response<>(ResponseCode.OK);
     }
 
-    /**
-     * 返回携带数据的成功
-     *
-     * @param data 数据
-     * @param <T>  泛型
-     * @return Response
-     */
-    public static <T> Response<T> success(@Nullable T data) {
-        return new Response<>(ResponseCode.OK, data);
-    }
+	/**
+	 * 返回携带数据的成功
+	 *
+	 * @param data 数据
+	 * @param <T>  泛型
+	 * @return Response
+	 */
+	public static <T> Response<T> success(@Nullable T data) {
+		return new Response<>(ResponseCode.OK, data);
+	}
 
-    /**
-     * 返回失败信息
-     *
-     * @param msg 失败信息
-     * @param <T> 泛型
-     * @return Response
-     */
-    public static <T> Response<T> error(String msg) {
-        return new Response<>(ResponseCode.INTERNAL_SERVER_ERROR, msg);
+	@SneakyThrows
+	public static <T> void success(@NonNull HttpServletResponse response, @Nullable T data) {
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setCharacterEncoding("utf-8");
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String resBody = objectMapper.writeValueAsString(new Response<>(ResponseCode.OK, data));
+		PrintWriter printWriter = response.getWriter();
+		printWriter.print(resBody);
+		printWriter.flush();
+		printWriter.close();
+	}
+
+	/**
+	 * 返回失败信息
+	 *
+	 * @param msg 失败信息
+	 * @param <T> 泛型
+	 * @return Response
+	 */
+	public static <T> Response<T> error(String msg) {
+		return new Response<>(ResponseCode.INTERNAL_SERVER_ERROR, msg);
     }
 
     /**

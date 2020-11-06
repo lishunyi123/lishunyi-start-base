@@ -47,6 +47,10 @@
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-auto</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.codearte.props2yaml</groupId>
