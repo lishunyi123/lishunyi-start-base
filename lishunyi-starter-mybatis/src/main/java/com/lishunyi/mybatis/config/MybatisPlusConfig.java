@@ -2,8 +2,8 @@ package com.lishunyi.mybatis.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.lishunyi.mybatis.injector.BaseSqlInjector;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,15 +35,14 @@ public class MybatisPlusConfig {
 		return interceptor;
 	}
 
-    /**
-     * 乐观锁插件
-     * 字段必须加上@vesion注解
-     * @return
-     */
-    @Bean
-    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
-        return new OptimisticLockerInterceptor();
-    }
-
+	/**
+	 * 使用自定义的BaseSqlInjector
+	 *
+	 * @return BaseSqlInjector
+	 */
+	@Bean
+	public BaseSqlInjector baseSqlInjector() {
+		return new BaseSqlInjector();
+	}
 }
 

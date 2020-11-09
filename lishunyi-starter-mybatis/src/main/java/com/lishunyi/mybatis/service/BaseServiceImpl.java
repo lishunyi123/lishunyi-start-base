@@ -1,7 +1,6 @@
 package com.lishunyi.mybatis.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
@@ -11,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lishunyi.base.id.IdConfig;
 import com.lishunyi.mybatis.entity.BaseEntity;
 import com.lishunyi.mybatis.entity.BaseTenantEntity;
+import com.lishunyi.mybatis.mapper.DefaultBaseMapper;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import java.util.function.Function;
  * @version 1.0
  * @since 2020/10/26 16:56
  **/
-public abstract class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> extends ServiceImpl<M, T> implements IService<T> {
+public abstract class BaseServiceImpl<M extends DefaultBaseMapper<T>, T extends BaseEntity<T>> extends ServiceImpl<M, T> implements IService<T> {
 	protected Log log = LogFactory.getLog(this.getClass());
 	@Autowired(required = false)
 	protected M baseMapper;
@@ -65,10 +65,48 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEnt
 
 	@Override
 	public boolean saveBatch(Collection<T> entityList, int batchSize) {
-		if (!CollectionUtils.isEmpty(entityList)) {
-			entityList.forEach(this::initId);
+		if (CollectionUtils.isEmpty(entityList)) {
+			return true;
 		}
+		entityList.forEach(this::initId);
 		return super.saveBatch(entityList, batchSize);
+	}
+
+	/**
+	 * 全量批添加
+	 *
+	 * @param entityList
+	 * @param batchSize
+	 * @return
+	 */
+	public int fastSaveBatch(List<T> entityList, int batchSize) {
+		if (CollectionUtils.isEmpty(entityList)) {
+			return 0;
+		}
+		if (list().size() <= batchSize) {
+			return baseMapper.insertBatchSomeColumn(entityList);
+		}
+		for (int fromIdx = 0, endIdx = batchSize; ; fromIdx += batchSize, endIdx += batchSize) {
+			if (endIdx > entityList.size()) {
+				endIdx = entityList.size();
+			}
+			baseMapper.insertBatchSomeColumn(entityList.subList(fromIdx, endIdx));
+			if (endIdx == entityList.size()) {
+				return endIdx;
+			}
+		}
+	}
+
+	public int fastSaveBatch(List<T> entityList) {
+		return fastSaveBatch(entityList, DEFAULT_BATCH_SIZE);
+	}
+
+	public int updateAllColById(T entity) {
+		return baseMapper.alwaysUpdateSomeColumnById(entity);
+	}
+
+	int deleteByIdWithFill(T entity) {
+		return baseMapper.deleteByIdWithFill(entity);
 	}
 
 	@Override
