@@ -13,6 +13,7 @@
         <module>lishunyi-starter-distributed-lock</module>
         <module>lishunyi-starter-dependencies</module>
         <module>lishunyi-starter-redis</module>
+        <module>lishunyi-starter-jpa</module>
     </modules>
     <!-- 默认为jar，pom表示父类型为pom -->
     <packaging>pom</packaging>
