@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.lishunyi.mybatis.injector.BaseSqlInjector;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
 
 /**
  * @ClassName MybatisPlusConfig
@@ -18,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
  * @Version 1.0
  **/
 @Configuration
+@MapperScan(basePackages = {"com.lishunyi.**.dao", "com.lishunyi.**.mapper", "com.lishunyi.**.repository"}, annotationClass = Repository.class)
 public class MybatisPlusConfig {
 
 	/**

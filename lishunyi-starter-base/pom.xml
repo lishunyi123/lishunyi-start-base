@@ -47,9 +47,20 @@
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-auto</artifactId>
         </dependency>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
         <dependency>
@@ -58,7 +69,6 @@
             <version>0.5</version>
         </dependency>
     </dependencies>
-
 
 
 </project>

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -44,6 +45,7 @@ public abstract class BaseServiceImpl<M extends DefaultBaseMapper<T>, T extends 
 	protected IdConfig idConfig;
 
 	@Autowired
+	@Lazy
 	protected RedisTemplate<String, Object> redisTemplate;
 
 	private Long tenantId;
